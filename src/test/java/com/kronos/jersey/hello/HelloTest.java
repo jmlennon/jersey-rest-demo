@@ -1,6 +1,7 @@
 package com.kronos.jersey.hello;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import javax.ws.rs.core.Application;
 
@@ -33,12 +34,17 @@ public class HelloTest extends JerseyTest {
  
     @Test
     public void testAloha() {
+        String expectedGreeting = "Aloha!";
+        String expectedLocation = "Honolulu";
+        String expectedToken = "<expected-header-token>";
         Aloha aloha = target("hello/aloha")
-                .queryParam(HelloRestService.QUERY_PARAM_LOCATION, "Honolulu")
-                .queryParam(HelloRestService.QUERY_PARAM_SPEAKS_HAWAIIAN, false)
+                .queryParam(HelloRestService.QUERY_PARAM_LOCATION, expectedLocation)
+                .queryParam(HelloRestService.QUERY_PARAM_SPEAKS_HAWAIIAN, true)
                 .request()
-                .header(HelloRestService.HEADER_PARAM_TOKEN, "<this-is-a-token>")
+                .header(HelloRestService.HEADER_PARAM_TOKEN, expectedToken)
                 .get(Aloha.class);
-        assertEquals("Don Ho!", aloha.getTarget());
+        assertTrue(aloha.getTarget().contains(expectedGreeting));
+        assertTrue(aloha.getTarget().contains(expectedLocation));
+        assertTrue(aloha.getTarget().contains(expectedToken));
     }
 }
